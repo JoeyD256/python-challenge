@@ -24,7 +24,6 @@ with open(file_path) as budget_data:
     # adding first values to appropriate lists
     total_months.append(first_row[0])
     profit_loss.append(int(first_row[1]))
-    avg_change.append(prev_net)
 
     # gather necessary values into correlating lists
     for row in csvreader:
@@ -35,8 +34,6 @@ with open(file_path) as budget_data:
         prev_net = int(row[1])
         avg_change.append(change)
 
-    # removing first value from avg_change (the first 'prev_net' value).
-    avg_change.pop(0)
 
     # header of the data
     print("Financial Analysis")
@@ -47,16 +44,39 @@ with open(file_path) as budget_data:
 
     # summing and printing profit/loss
     total_profit_loss = sum(profit_loss)
-    print(f'Total: {total_profit_loss}')        
+    print(f'Total: {total_profit_loss}')
 
     # calculating and printing average change
-    average_change = (sum(avg_change)/len(avg_change)) * -1
+    average_change = round((sum(avg_change)/len(avg_change)), 2) * -1
     print(f'Average Change: {average_change}')
 
-    #calculating and printing average increase
+    #calculating and printing greatest increase
     greatest_increase = min(avg_change) * -1
-    print(f'Greatest Increase in Profits: {greatest_increase}')
+    print(f'Greatest Increase in Profits: ({greatest_increase})')
 
-    #calculating and printing average decrease
+    #calculating and printing greatest decrease
     greatest_decrease = max(avg_change) * -1
-    print(f'Greatest Decrease in Profits: {greatest_decrease}')
+    print(f'Greatest Decrease in Profits: ({greatest_decrease})')
+
+# recieving path for output
+output_path = os.path.join("PyBank","Analysis","PyBank_Analysis.txt")
+
+# Open the file using "write" mode. Specify the variable to hold the contents
+with open(output_path, 'w') as csvfile:
+
+    # Initialize csv.writer
+    csvwriter = csv.writer(csvfile, delimiter=',')
+
+    # Write results into analysis text file
+    csvwriter.writerow(['Financial Analysis'])
+    csvwriter.writerow(['-------------------------------'])
+
+    csvwriter.writerow([f'Total Months: {len(total_months)}'])
+
+    csvwriter.writerow([f'Total: {total_profit_loss}'])
+
+    csvwriter.writerow([f'Average Change: {average_change}'])
+
+    csvwriter.writerow([f'Greatest Increase in Profits: ({greatest_increase})'])
+
+    csvwriter.writerow([f'Greatest Decrease in Profits: ({greatest_decrease})'])
